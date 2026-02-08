@@ -9,6 +9,8 @@ let allCategories = [];
 let currentCategory = 'all';
 let currentCarouselIndex = 0;
 let currentProductImages = [];
+let currentPage = 1;
+const PRODUCTS_PER_PAGE = 40; // 4 kolom x 10 baris
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async () => {
@@ -81,6 +83,7 @@ function renderCategories() {
 // Filter products by category
 function filterByCategory(category) {
   currentCategory = category;
+  currentPage = 1; // Reset ke halaman pertama saat ganti kategori
   updateActiveCategoryButton();
   renderProducts();
 }
@@ -121,34 +124,85 @@ function renderProducts() {
   const grid = document.getElementById('productsGrid');
   const loading = document.getElementById('loadingState');
   const empty = document.getElementById('emptyState');
-  
+  const paginationContainerId = 'productsPagination';
+
   // Filter products by category
-  const filteredProducts = currentCategory === 'all' 
-    ? allProducts 
+  const filteredProducts = currentCategory === 'all'
+    ? allProducts
     : allProducts.filter(p => p.category === currentCategory);
-  
+
   // Hide loading
   loading.classList.add('hidden');
-  
+
   // Show empty state if no products
   if (filteredProducts.length === 0) {
     grid.classList.add('hidden');
     empty.classList.remove('hidden');
+    // Hapus pagination jika ada
+    const oldPagination = document.getElementById(paginationContainerId);
+    if (oldPagination) oldPagination.remove();
     return;
   }
-  
+
   // Show products
   empty.classList.add('hidden');
   grid.classList.remove('hidden');
-  
+
   // Clear grid
   grid.innerHTML = '';
-  
-  // Render product cards
-  filteredProducts.forEach(product => {
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  if (currentPage > totalPages) currentPage = 1;
+  const startIdx = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const endIdx = startIdx + PRODUCTS_PER_PAGE;
+  const pageProducts = filteredProducts.slice(startIdx, endIdx);
+
+  // Render product cards for current page
+  pageProducts.forEach(product => {
     const card = createProductCard(product);
     grid.appendChild(card);
   });
+
+  // Render pagination controls
+  let pagination = document.getElementById(paginationContainerId);
+  if (!pagination) {
+    pagination = document.createElement('div');
+    pagination.id = paginationContainerId;
+    pagination.className = 'flex justify-center mt-8 gap-2';
+    grid.parentNode.appendChild(pagination);
+  } else {
+    pagination.innerHTML = '';
+  }
+  pagination.innerHTML = '';
+  if (totalPages > 1) {
+    // Prev button
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = 'Sebelumnya';
+    prevBtn.className = 'px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = () => { currentPage--; renderProducts(); };
+    pagination.appendChild(prevBtn);
+
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.createElement('button');
+      pageBtn.textContent = i;
+      pageBtn.className = `px-3 py-2 rounded-lg font-semibold mx-1 ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`;
+      pageBtn.onclick = () => { currentPage = i; renderProducts(); };
+      pagination.appendChild(pageBtn);
+    }
+
+    // Next button
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Selanjutnya';
+    nextBtn.className = 'px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = () => { currentPage++; renderProducts(); };
+    pagination.appendChild(nextBtn);
+  } else {
+    pagination.innerHTML = '';
+  }
 }
 
 // Create product card
