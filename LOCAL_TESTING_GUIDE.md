@@ -48,8 +48,8 @@ Project ini **TIDAK BISA** jalan tanpa Supabase karena:
      - ✅ Centang **"Auto Confirm User"**
    - Klik **"Create user"**
 
-5. **Ambil Credentials**:
-   - Klik **Settings** (ikon gear) di sidebar
+5. **Ambil Credentials** (masih di Supabase dashboard):
+   - Klik **Settings** (ikon gear) di sidebar Supabase
    - Klik **API**
    - Copy 2 nilai ini:
      - **Project URL**: `https://xxxxx.supabase.co`
