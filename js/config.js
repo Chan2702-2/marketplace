@@ -9,9 +9,9 @@ window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON
 // App Configuration
 const APP_CONFIG = {
   // Brand Information (will be loaded from database)
-  brandName: 'Your Brand',
+  brandName: 'DNA Store',
   brandTagline: 'Produk Berkualitas Premium',
-  brandLogo: 'https://via.placeholder.com/150',
+  brandLogo: 'img/logo DNA store.jpeg',
   
   // Social Media Links (will be loaded from database)
   socialMedia: {
@@ -21,7 +21,7 @@ const APP_CONFIG = {
   },
   
   // WhatsApp Customer Service (will be loaded from database)
-  whatsapp: '6281234567890',
+  whatsapp: '6285173271024',
   
   // Marketplace Store Links (will be loaded from database)
   marketplace: {

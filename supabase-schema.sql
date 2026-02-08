@@ -38,18 +38,13 @@ INSERT INTO settings (key, value) VALUES
   ('instagram_url', 'https://instagram.com/yourbrand'),
   ('facebook_url', 'https://facebook.com/yourbrand'),
   ('tiktok_url', 'https://tiktok.com/@yourbrand'),
-  ('whatsapp_number', '6281234567890'),
+  ('whatsapp_number', '6283862644911'),
   ('shopee_store_url', 'https://shopee.co.id/yourbrand'),
   ('tokopedia_store_url', 'https://tokopedia.com/yourbrand')
 ON CONFLICT (key) DO NOTHING;
 
 -- Insert default categories
 INSERT INTO categories (name) VALUES
-  ('Elektronik'),
-  ('Fashion'),
-  ('Kecantikan'),
-  ('Rumah Tangga'),
-  ('Olahraga')
 ON CONFLICT (name) DO NOTHING;
 
 -- Create function to update updated_at timestamp
