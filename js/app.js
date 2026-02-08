@@ -1,3 +1,8 @@
+// Dummy loadSettings function to prevent ReferenceError
+async function loadSettings() {
+  // You can implement loading settings from DB here if needed
+  return;
+}
 // Global variables
 let allProducts = [];
 let allCategories = [];
