@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marketplace DNA Store</title>
+  <title>DNA Store</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -255,7 +255,7 @@
       </div>
       
       <!-- Products Grid -->
-      <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+      <div id="productsGrid" class="grid grid-cols-4 gap-6 hidden">
         <!-- Products will be loaded dynamically -->
       </div>
       
@@ -289,7 +289,7 @@
       <!-- Modal Content -->
       <div class="p-6 max-h-[70vh] overflow-y-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Image Carousel -->
+          <!-- Image Carousel with Zoom -->
           <div>
             <div class="carousel-container">
               <div id="modalCarousel" class="carousel-images">
@@ -305,8 +305,13 @@
             <div id="carouselDots" class="flex justify-center gap-2 mt-4">
               <!-- Dots will be loaded dynamically -->
             </div>
+            <!-- Zoom Controls -->
+            <div class="flex justify-center gap-2 mt-2">
+              <button id="zoomInBtn" class="px-3 py-1 rounded bg-blue-500 text-white text-sm font-bold hover:bg-blue-600" type="button"><i class="fas fa-search-plus"></i> Zoom In</button>
+              <button id="zoomOutBtn" class="px-3 py-1 rounded bg-blue-500 text-white text-sm font-bold hover:bg-blue-600" type="button"><i class="fas fa-search-minus"></i> Zoom Out</button>
+              <button id="zoomResetBtn" class="px-3 py-1 rounded bg-gray-300 text-gray-800 text-sm font-bold hover:bg-gray-400" type="button"><i class="fas fa-compress"></i> Reset</button>
+            </div>
           </div>
-          
           <!-- Product Info -->
           <div>
             <span id="modalCategory" class="badge bg-blue-100 text-blue-800 mb-3"></span>
@@ -362,6 +367,38 @@
   
   <!-- Main App Script -->
   <script src="js/app.js"></script>
+  <script>
+    // Zoom logic for modal product image
+    let zoomLevel = 1;
+    function setZoom(level) {
+      zoomLevel = Math.max(1, Math.min(level, 4));
+      const carousel = document.getElementById('modalCarousel');
+      if (carousel) {
+        Array.from(carousel.children).forEach(img => {
+          img.style.transform = `scale(${zoomLevel})`;
+          img.style.transition = 'transform 0.2s';
+          img.style.cursor = zoomLevel > 1 ? 'zoom-out' : 'zoom-in';
+        });
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('productModal');
+      modal.addEventListener('show', () => setZoom(1));
+      document.getElementById('zoomInBtn')?.addEventListener('click', () => setZoom(zoomLevel + 0.25));
+      document.getElementById('zoomOutBtn')?.addEventListener('click', () => setZoom(zoomLevel - 0.25));
+      document.getElementById('zoomResetBtn')?.addEventListener('click', () => setZoom(1));
+    });
+    // Reset zoom when modal opened
+    function openProductModal(product) {
+      setZoom(1);
+      if (window._openProductModal) window._openProductModal(product);
+    }
+    // Patch global openProductModal if needed
+    if (typeof window.openProductModal === 'function') {
+      window._openProductModal = window.openProductModal;
+      window.openProductModal = openProductModal;
+    }
+  </script>
   
 </body>
 </html>
