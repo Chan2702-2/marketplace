@@ -64,7 +64,10 @@ function renderCategories() {
   // Clear existing categories except "Semua Produk"
   const allButton = container.querySelector('[data-category="all"]');
   container.innerHTML = '';
-  container.appendChild(allButton);
+  if (allButton) {
+    allButton.onclick = () => filterByCategory('all');
+    container.appendChild(allButton);
+  }
   
   // Add category buttons
   allCategories.forEach(category => {
@@ -208,7 +211,7 @@ function renderProducts() {
 // Create product card
 function createProductCard(product) {
   const card = document.createElement('div');
-  card.className = 'bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer';
+  card.className = 'bg-white rounded-xl overflow-hidden shadow-lg card-hover cursor-pointer';
   card.onclick = () => openProductModal(product);
   
   const imageUrl = product.images && product.images.length > 0 
@@ -217,25 +220,16 @@ function createProductCard(product) {
   
   card.innerHTML = `
     <div class="relative">
-      <img src="${imageUrl}" alt="${product.name}" class="w-full h-48 object-cover">
-      <span class="badge bg-blue-500 text-white absolute top-3 left-3">${product.category}</span>
+      <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover">
+      <span class="badge bg-blue-500 text-white absolute top-2 left-2 text-xs px-2 py-1">${product.category}</span>
     </div>
-    <div class="p-4">
-      <h3 class="font-bold text-lg text-gray-800 mb-2 line-clamp-2">${product.name}</h3>
-      <div class="mb-3">
-        <p class="price-original">Rp ${formatPrice(product.original_price)}</p>
-        <p class="price-promo">Rp ${formatPrice(product.promo_price)}</p>
+    <div class="p-2">
+      <h3 class="font-bold text-base text-gray-800 mb-1 line-clamp-2">${product.name}</h3>
+      <div class="mb-2">
+        <p class="price-original text-xs">Rp ${formatPrice(product.original_price)}</p>
+        <p class="price-promo text-sm">Rp ${formatPrice(product.promo_price)}</p>
       </div>
-      <div class="flex gap-2">
-        <button onclick="event.stopPropagation(); window.open('${product.shopee_link || '#'}', '_blank')" 
-                class="flex-1 bg-orange-500 text-white text-sm py-2 px-3 rounded-lg hover:bg-orange-600 transition-colors ${!product.shopee_link ? 'opacity-50 cursor-not-allowed' : ''}">
-          <i class="fas fa-shopping-bag mr-1"></i> Shopee
-        </button>
-        <button onclick="event.stopPropagation(); window.open('${product.tokopedia_link || '#'}', '_blank')" 
-                class="flex-1 bg-green-500 text-white text-sm py-2 px-3 rounded-lg hover:bg-green-600 transition-colors ${!product.tokopedia_link ? 'opacity-50 cursor-not-allowed' : ''}">
-          <i class="fas fa-store mr-1"></i> Tokped
-        </button>
-      </div>
+      <!-- Tombol marketplace dihilangkan dari katalog, hanya muncul di modal/detail -->
     </div>
   `;
   

@@ -11,7 +11,7 @@ const APP_CONFIG = {
   // Brand Information (will be loaded from database)
   brandName: 'DNA Store',
   brandTagline: 'Produk Berkualitas Premium',
-  brandLogo: 'https://drive.google.com/file/d/1eKwjocX8E-mts_q8SClg40wrlbPtGa8b/view?usp=sharing',
+  brandLogo: 'img/logo.png',
   
   // Social Media Links (will be loaded from database)
   socialMedia: {
