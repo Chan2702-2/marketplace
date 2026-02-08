@@ -41,7 +41,7 @@ function updateUI() {
 // Load categories from database
 async function loadCategories() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
       .from('categories')
       .select('*')
       .order('name');
@@ -100,7 +100,7 @@ function updateActiveCategoryButton() {
 // Load products from database
 async function loadProducts() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
       .from('products')
       .select('*')
       .eq('is_active', true)

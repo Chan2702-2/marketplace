@@ -5,8 +5,9 @@ let currentProductImages = [];
 let editingProductId = null;
 
 // Check authentication
-supabase.auth.getSession().then(({ data: { session } }) => {
+window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
   if (!session) {
+    alert('Silakan login terlebih dahulu untuk mengakses dashboard.');
     window.location.href = 'admin.html';
   } else {
     initDashboard();
@@ -23,14 +24,14 @@ async function initDashboard() {
 
 // Logout
 async function logout() {
-  await supabase.auth.signOut();
+  await window.supabaseClient.auth.signOut();
   window.location.href = 'admin.html';
 }
 
 // Load categories
 async function loadCategories() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
       .from('categories')
       .select('*')
       .order('name');
@@ -61,7 +62,7 @@ function updateCategorySelects() {
 // Load products
 async function loadProducts() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
       .from('products')
       .select('*')
       .order('created_at', { ascending: false });
@@ -196,7 +197,7 @@ async function deleteProduct(productId) {
   if (!confirm('Apakah Anda yakin ingin menghapus produk ini?')) return;
   
   try {
-    const { error } = await supabase
+    const { error } = await window.supabaseClient
       .from('products')
       .delete()
       .eq('id', productId);
@@ -271,7 +272,7 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
   try {
     if (editingProductId) {
       // Update existing product
-      const { error } = await supabase
+      const { error } = await window.supabaseClient
         .from('products')
         .update(productData)
         .eq('id', editingProductId);
@@ -280,7 +281,7 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
       alert('Produk berhasil diupdate');
     } else {
       // Insert new product
-      const { error } = await supabase
+      const { error } = await window.supabaseClient
         .from('products')
         .insert([productData]);
       
@@ -335,7 +336,7 @@ async function addCategory() {
   }
   
   try {
-    const { error } = await supabase
+    const { error } = await window.supabaseClient
       .from('categories')
       .insert([{ name }]);
     
@@ -355,7 +356,7 @@ async function deleteCategory(categoryId) {
   if (!confirm('Apakah Anda yakin ingin menghapus kategori ini?')) return;
   
   try {
-    const { error } = await supabase
+    const { error } = await window.supabaseClient
       .from('categories')
       .delete()
       .eq('id', categoryId);
@@ -385,7 +386,7 @@ function closeSettingsModal() {
 
 async function loadSettings() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
       .from('settings')
       .select('*');
     
@@ -452,7 +453,7 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
   
   try {
     for (const update of updates) {
-      const { error } = await supabase
+      const { error } = await window.supabaseClient
         .from('settings')
         .update({ value: update.value })
         .eq('key', update.key);
