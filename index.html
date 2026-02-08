@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace Landing Page</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .btn-hover:hover {
+      transform: scale(1.05);
+    }
+    
+    .social-icon {
+      transition: all 0.3s ease;
+    }
+    
+    .social-icon:hover {
+      transform: scale(1.15);
+    }
+    
+    .floating-whatsapp {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    .floating-whatsapp:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(37, 211, 102, 0.6);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .price-original {
+      text-decoration: line-through;
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+    
+    .price-promo {
+      color: #ef4444;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      overflow-y: auto;
+    }
+    
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    
+    .carousel-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1rem;
+    }
+    
+    .carousel-images {
+      display: flex;
+      transition: transform 0.3s ease;
+    }
+    
+    .carousel-images img {
+      min-width: 100%;
+      object-fit: cover;
+    }
+    
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    
+    .carousel-btn:hover {
+      background: white;
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    .carousel-btn.prev {
+      left: 10px;
+    }
+    
+    .carousel-btn.next {
+      right: 10px;
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Hero Section -->
+  <section class="py-16 px-4">
+    <div class="max-w-6xl mx-auto text-center">
+      <!-- Brand Logo -->
+      <div class="mb-6">
+        <img id="brandLogo" src="https://via.placeholder.com/150" alt="Brand Logo" class="w-32 h-32 rounded-full mx-auto shadow-2xl border-4 border-white object-cover">
+      </div>
+      
+      <!-- Brand Name -->
+      <h1 id="brandName" class="text-4xl md:text-5xl font-bold text-white mb-3">Your Brand</h1>
+      
+      <!-- Tagline -->
+      <p id="brandTagline" class="text-lg md:text-xl text-white/90">Produk Berkualitas Premium</p>
+    </div>
+  </section>
+  
+  <!-- Main Content Container -->
+  <div class="max-w-6xl mx-auto px-4 pb-20">
+    
+    <!-- Social Media Section -->
+    <section class="bg-white rounded-3xl shadow-2xl p-8 mb-8">
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Temukan Kami</h2>
+      <div class="flex justify-center gap-6">
+        <!-- Instagram -->
+        <a id="instagramLink" href="#" target="_blank" class="social-icon">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 flex items-center justify-center shadow-lg">
+            <i class="fab fa-instagram text-white text-2xl"></i>
+          </div>
+        </a>
+        
+        <!-- Facebook -->
+        <a id="facebookLink" href="#" target="_blank" class="social-icon">
+          <div class="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center shadow-lg">
+            <i class="fab fa-facebook-f text-white text-2xl"></i>
+          </div>
+        </a>
+        
+        <!-- TikTok -->
+        <a id="tiktokLink" href="#" target="_blank" class="social-icon">
+          <div class="w-16 h-16 rounded-full bg-black flex items-center justify-center shadow-lg">
+            <i class="fab fa-tiktok text-white text-2xl"></i>
+          </div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Marketplace Section -->
+    <section class="bg-white rounded-3xl shadow-2xl p-8 mb-8">
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Marketplace Kami</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+        <!-- Shopee Button -->
+        <a id="shopeeLink" href="#" target="_blank" class="btn-hover block">
+          <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl p-6 text-center shadow-lg">
+            <i class="fas fa-shopping-bag text-3xl mb-2"></i>
+            <p class="text-xl font-bold">Belanja di Shopee</p>
+          </div>
+        </a>
+        
+        <!-- Tokopedia Button -->
+        <a id="tokopediaLink" href="#" target="_blank" class="btn-hover block">
+          <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl p-6 text-center shadow-lg">
+            <i class="fas fa-store text-3xl mb-2"></i>
+            <p class="text-xl font-bold">Belanja di Tokopedia</p>
+          </div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Categories Section -->
+    <section class="bg-white rounded-3xl shadow-2xl p-8 mb-8">
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Kategori Produk</h2>
+      <div id="categoriesContainer" class="flex flex-wrap justify-center gap-3">
+        <!-- Categories will be loaded dynamically -->
+        <button class="badge bg-gradient-to-r from-blue-500 to-purple-600 text-white cursor-pointer hover:shadow-lg transition-all" data-category="all">
+          Semua Produk
+        </button>
+      </div>
+    </section>
+    
+    <!-- Products Section -->
+    <section class="bg-white rounded-3xl shadow-2xl p-8">
+      <h2 class="text-2xl font-bold text-center mb-8 text-gray-800">Katalog Produk</h2>
+      
+      <!-- Loading State -->
+      <div id="loadingState" class="text-center py-12">
+        <div class="loading mx-auto mb-4"></div>
+        <p class="text-gray-600">Memuat produk...</p>
+      </div>
+      
+      <!-- Products Grid -->
+      <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+        <!-- Products will be loaded dynamically -->
+      </div>
+      
+      <!-- Empty State -->
+      <div id="emptyState" class="text-center py-12 hidden">
+        <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-600 text-lg">Tidak ada produk tersedia</p>
+      </div>
+    </section>
+    
+  </div>
+  
+  <!-- Floating WhatsApp Button -->
+  <a id="whatsappButton" href="#" target="_blank" class="floating-whatsapp">
+    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center shadow-2xl">
+      <i class="fab fa-whatsapp text-white text-3xl"></i>
+    </div>
+  </a>
+  
+  <!-- Product Detail Modal -->
+  <div id="productModal" class="modal">
+    <div class="bg-white rounded-3xl max-w-4xl w-full mx-4 overflow-hidden shadow-2xl">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center p-6 border-b">
+        <h3 class="text-2xl font-bold text-gray-800">Detail Produk</h3>
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <!-- Modal Content -->
+      <div class="p-6 max-h-[70vh] overflow-y-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Image Carousel -->
+          <div>
+            <div class="carousel-container">
+              <div id="modalCarousel" class="carousel-images">
+                <!-- Images will be loaded dynamically -->
+              </div>
+              <button class="carousel-btn prev" onclick="prevImage()">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button class="carousel-btn next" onclick="nextImage()">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+            <div id="carouselDots" class="flex justify-center gap-2 mt-4">
+              <!-- Dots will be loaded dynamically -->
+            </div>
+          </div>
+          
+          <!-- Product Info -->
+          <div>
+            <span id="modalCategory" class="badge bg-blue-100 text-blue-800 mb-3"></span>
+            <h4 id="modalName" class="text-2xl font-bold text-gray-800 mb-4"></h4>
+            
+            <div class="mb-4">
+              <p id="modalOriginalPrice" class="price-original"></p>
+              <p id="modalPromoPrice" class="price-promo"></p>
+            </div>
+            
+            <div class="mb-4">
+              <h5 class="font-semibold text-gray-800 mb-2">Deskripsi:</h5>
+              <p id="modalDescription" class="text-gray-600 whitespace-pre-line"></p>
+            </div>
+            
+            <div class="mb-6">
+              <h5 class="font-semibold text-gray-800 mb-2">Spesifikasi:</h5>
+              <p id="modalSpecifications" class="text-gray-600 whitespace-pre-line"></p>
+            </div>
+            
+            <!-- Buy Buttons -->
+            <div class="space-y-3">
+              <a id="modalShopeeLink" href="#" target="_blank" class="btn-hover block">
+                <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl p-4 text-center shadow-lg">
+                  <i class="fas fa-shopping-bag mr-2"></i>
+                  <span class="font-bold">Beli di Shopee</span>
+                </div>
+              </a>
+              
+              <a id="modalTokopediaLink" href="#" target="_blank" class="btn-hover block">
+                <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-4 text-center shadow-lg">
+                  <i class="fas fa-store mr-2"></i>
+                  <span class="font-bold">Beli di Tokopedia</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer class="text-center py-8 text-white/80">
+    <p>&copy; 2026 <span id="footerBrandName">Your Brand</span></p>
+  </footer>
+  
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Config -->
+  <script src="js/config.js"></script>
+  
+  <!-- Main App Script -->
+  <script src="js/app.js"></script>
+  
+</body>
+</html>

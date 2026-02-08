@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Marketplace</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      overflow-y: auto;
+    }
+    
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    
+    .image-preview {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .image-preview img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+    }
+    
+    .image-preview .remove-btn {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  
+  <!-- Header -->
+  <header class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+        <p class="text-sm text-gray-600">Kelola produk dan pengaturan</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="index.html" target="_blank" class="text-blue-600 hover:text-blue-700">
+          <i class="fas fa-external-link-alt mr-2"></i>
+          Lihat Website
+        </a>
+        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+          <i class="fas fa-sign-out-alt mr-2"></i>
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-600 text-sm">Total Produk</p>
+            <p id="totalProducts" class="text-3xl font-bold text-gray-800">0</p>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+            <i class="fas fa-box text-blue-600 text-xl"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-600 text-sm">Produk Aktif</p>
+            <p id="activeProducts" class="text-3xl font-bold text-green-600">0</p>
+          </div>
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-600 text-sm">Kategori</p>
+            <p id="totalCategories" class="text-3xl font-bold text-purple-600">0</p>
+          </div>
+          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+            <i class="fas fa-tags text-purple-600 text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Actions -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+      <div class="flex flex-wrap gap-4">
+        <button onclick="openAddProductModal()" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
+          <i class="fas fa-plus mr-2"></i>
+          Tambah Produk
+        </button>
+        <button onclick="openCategoriesModal()" class="bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+          <i class="fas fa-tags mr-2"></i>
+          Kelola Kategori
+        </button>
+        <button onclick="openSettingsModal()" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+          <i class="fas fa-cog mr-2"></i>
+          Pengaturan
+        </button>
+      </div>
+    </div>
+    
+    <!-- Products Table -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="p-6 border-b">
+        <h2 class="text-xl font-bold text-gray-800">Daftar Produk</h2>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Gambar</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Nama Produk</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Kategori</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Harga</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody" class="divide-y divide-gray-200">
+            <!-- Products will be loaded here -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden p-12 text-center">
+        <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-600">Belum ada produk. Tambahkan produk pertama Anda!</p>
+      </div>
+    </div>
+    
+  </main>
+  
+  <!-- Add/Edit Product Modal -->
+  <div id="productModal" class="modal">
+    <div class="bg-white rounded-2xl max-w-3xl w-full mx-4 overflow-hidden shadow-2xl">
+      <div class="flex justify-between items-center p-6 border-b bg-gradient-to-r from-blue-500 to-purple-600">
+        <h3 id="modalTitle" class="text-2xl font-bold text-white">Tambah Produk</h3>
+        <button onclick="closeProductModal()" class="text-white hover:text-gray-200 text-2xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <form id="productForm" class="p-6 max-h-[70vh] overflow-y-auto">
+        <input type="hidden" id="productId">
+        
+        <div class="space-y-4">
+          <!-- Product Name -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Produk *</label>
+            <input type="text" id="productName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+          </div>
+          
+          <!-- Category -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori *</label>
+            <select id="productCategory" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+              <option value="">Pilih Kategori</option>
+            </select>
+          </div>
+          
+          <!-- Prices -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Harga Asli *</label>
+              <input type="number" id="productOriginalPrice" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Harga Promo *</label>
+              <input type="number" id="productPromoPrice" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+          </div>
+          
+          <!-- Description -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi</label>
+            <textarea id="productDescription" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"></textarea>
+          </div>
+          
+          <!-- Specifications -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Spesifikasi</label>
+            <textarea id="productSpecifications" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"></textarea>
+          </div>
+          
+          <!-- Marketplace Links -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Link Shopee</label>
+              <input type="url" id="productShopeeLink" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Link Tokopedia</label>
+              <input type="url" id="productTokopediaLink" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+          </div>
+          
+          <!-- Images -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Gambar Produk (URL)</label>
+            <div class="flex gap-2 mb-2">
+              <input type="url" id="imageUrlInput" placeholder="https://example.com/image.jpg" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+              <button type="button" onclick="addImageUrl()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <div id="imagePreviewContainer" class="flex flex-wrap gap-2">
+              <!-- Image previews will be shown here -->
+            </div>
+          </div>
+          
+          <!-- Active Status -->
+          <div class="flex items-center">
+            <input type="checkbox" id="productIsActive" checked class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+            <label for="productIsActive" class="ml-2 text-sm font-semibold text-gray-700">Produk Aktif</label>
+          </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="mt-6 flex gap-3">
+          <button type="submit" class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
+            <i class="fas fa-save mr-2"></i>
+            Simpan Produk
+          </button>
+          <button type="button" onclick="closeProductModal()" class="px-6 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition-colors">
+            Batal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Categories Modal -->
+  <div id="categoriesModal" class="modal">
+    <div class="bg-white rounded-2xl max-w-2xl w-full mx-4 overflow-hidden shadow-2xl">
+      <div class="flex justify-between items-center p-6 border-b bg-gray-800">
+        <h3 class="text-2xl font-bold text-white">Kelola Kategori</h3>
+        <button onclick="closeCategoriesModal()" class="text-white hover:text-gray-200 text-2xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="p-6">
+        <!-- Add Category -->
+        <div class="mb-6">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Tambah Kategori Baru</label>
+          <div class="flex gap-2">
+            <input type="text" id="newCategoryName" placeholder="Nama kategori" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            <button onclick="addCategory()" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 font-semibold">
+              <i class="fas fa-plus mr-2"></i>
+              Tambah
+            </button>
+          </div>
+        </div>
+        
+        <!-- Categories List -->
+        <div>
+          <h4 class="font-semibold text-gray-700 mb-3">Daftar Kategori</h4>
+          <div id="categoriesList" class="space-y-2">
+            <!-- Categories will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="bg-white rounded-2xl max-w-2xl w-full mx-4 overflow-hidden shadow-2xl">
+      <div class="flex justify-between items-center p-6 border-b bg-green-600">
+        <h3 class="text-2xl font-bold text-white">Pengaturan Website</h3>
+        <button onclick="closeSettingsModal()" class="text-white hover:text-gray-200 text-2xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <form id="settingsForm" class="p-6 max-h-[70vh] overflow-y-auto space-y-4">
+        <!-- Brand Info -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Brand</label>
+          <input type="text" id="settingBrandName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Tagline</label>
+          <input type="text" id="settingBrandTagline" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">URL Logo</label>
+          <input type="url" id="settingBrandLogo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+        </div>
+        
+        <!-- Social Media -->
+        <div class="border-t pt-4">
+          <h4 class="font-semibold text-gray-800 mb-3">Social Media</h4>
+          
+          <div class="space-y-3">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Instagram URL</label>
+              <input type="url" id="settingInstagram" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Facebook URL</label>
+              <input type="url" id="settingFacebook" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">TikTok URL</label>
+              <input type="url" id="settingTiktok" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+          </div>
+        </div>
+        
+        <!-- WhatsApp -->
+        <div class="border-t pt-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor WhatsApp (format: 6281234567890)</label>
+          <input type="text" id="settingWhatsapp" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+        </div>
+        
+        <!-- Marketplace -->
+        <div class="border-t pt-4">
+          <h4 class="font-semibold text-gray-800 mb-3">Marketplace</h4>
+          
+          <div class="space-y-3">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Shopee Store URL</label>
+              <input type="url" id="settingShopee" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Tokopedia Store URL</label>
+              <input type="url" id="settingTokopedia" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Submit -->
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+            <i class="fas fa-save mr-2"></i>
+            Simpan Pengaturan
+          </button>
+          <button type="button" onclick="closeSettingsModal()" class="px-6 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition-colors">
+            Batal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Config -->
+  <script src="js/config.js"></script>
+  
+  <!-- Dashboard Script -->
+  <script src="js/dashboard.js"></script>
+  
+</body>
+</html>

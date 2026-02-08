@@ -1,0 +1,20 @@
+{
+  "name": "marketplace-landing-page",
+  "version": "1.0.0",
+  "description": "Modern marketplace landing page with Supabase backend",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server -p 3000 -o",
+    "build": "echo 'Build complete'"
+  },
+  "keywords": [
+    "marketplace",
+    "landing-page",
+    "supabase"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}
