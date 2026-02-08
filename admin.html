@@ -195,7 +195,7 @@
         if (error) throw error;
         
         // Login successful, redirect to dashboard
-        window.location.href = 'dashboard.html';
+        window.location.href = 'auth_input_datao091.html';
         
       } catch (error) {
         console.error('Login error:', error);
@@ -211,7 +211,7 @@
     // Check if already logged in
     window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        window.location.href = 'dashboard.html';
+        window.location.href = 'auth_input_datao091.html';
       }
     });
   </script>
