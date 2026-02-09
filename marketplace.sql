@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS products (
   images TEXT[] DEFAULT '{}',
   shopee_link TEXT,
   tokopedia_link TEXT,
+  tiktok_shop_link TEXT,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())

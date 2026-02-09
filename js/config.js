@@ -69,6 +69,10 @@ async function loadSettings() {
         case 'tokopedia_store_url':
           APP_CONFIG.marketplace.tokopedia = setting.value;
           break;
+        case 'tiktok_marketplace_url':
+          if (!APP_CONFIG.marketplace) APP_CONFIG.marketplace = {};
+          APP_CONFIG.marketplace.tiktok = setting.value;
+          break;
       }
     });
     

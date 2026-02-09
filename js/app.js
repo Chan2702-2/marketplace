@@ -33,6 +33,9 @@ function updateUI() {
   
   document.getElementById('shopeeLink').href = APP_CONFIG.marketplace.shopee;
   document.getElementById('tokopediaLink').href = APP_CONFIG.marketplace.tokopedia;
+  if (APP_CONFIG.marketplace.tiktok) {
+    document.getElementById('tiktokShopLink').href = APP_CONFIG.marketplace.tiktok;
+  }
   
   const whatsappUrl = `https://wa.me/${APP_CONFIG.whatsapp}?text=Halo, saya tertarik dengan produk Anda`;
   document.getElementById('whatsappButton').href = whatsappUrl;
@@ -260,9 +263,30 @@ function openProductModal(product) {
   document.getElementById('modalDescription').textContent = product.description || 'Tidak ada deskripsi';
   document.getElementById('modalSpecifications').textContent = product.specifications || 'Tidak ada spesifikasi';
   
-  // Set marketplace links
-  document.getElementById('modalShopeeLink').href = product.shopee_link || '#';
-  document.getElementById('modalTokopediaLink').href = product.tokopedia_link || '#';
+  // Set marketplace links & visibility
+  const shopeeBtn = document.getElementById('modalShopeeLink');
+  if (product.shopee_link && product.shopee_link.trim() !== '') {
+    shopeeBtn.href = product.shopee_link;
+    shopeeBtn.style.display = '';
+  } else {
+    shopeeBtn.style.display = 'none';
+  }
+
+  const tokopediaBtn = document.getElementById('modalTokopediaLink');
+  if (product.tokopedia_link && product.tokopedia_link.trim() !== '') {
+    tokopediaBtn.href = product.tokopedia_link;
+    tokopediaBtn.style.display = '';
+  } else {
+    tokopediaBtn.style.display = 'none';
+  }
+
+  const tiktokBtn = document.getElementById('modalTiktokLink');
+  if (product.tiktok_link && product.tiktok_link.trim() !== '') {
+    tiktokBtn.href = product.tiktok_link;
+    tiktokBtn.style.display = '';
+  } else {
+    tiktokBtn.style.display = 'none';
+  }
   
   // Set images
   currentProductImages = product.images && product.images.length > 0 

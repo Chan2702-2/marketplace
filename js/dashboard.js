@@ -422,6 +422,9 @@ async function loadSettingsForm() {
       case 'tiktok_url':
         document.getElementById('settingTiktok').value = setting.value;
         break;
+      case 'tiktok_marketplace_url':
+        document.getElementById('settingTiktokMarketplace').value = setting.value;
+        break;
       case 'whatsapp_number':
         document.getElementById('settingWhatsapp').value = setting.value;
         break;
@@ -446,6 +449,7 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
     { key: 'instagram_url', value: document.getElementById('settingInstagram').value },
     { key: 'facebook_url', value: document.getElementById('settingFacebook').value },
     { key: 'tiktok_url', value: document.getElementById('settingTiktok').value },
+    { key: 'tiktok_marketplace_url', value: document.getElementById('settingTiktokMarketplace').value },
     { key: 'whatsapp_number', value: document.getElementById('settingWhatsapp').value },
     { key: 'shopee_store_url', value: document.getElementById('settingShopee').value },
     { key: 'tokopedia_store_url', value: document.getElementById('settingTokopedia').value }
@@ -469,12 +473,3 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
   }
 });
 
-// Close modals on outside click
-document.querySelectorAll('.modal').forEach(modal => {
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-  });
-});
