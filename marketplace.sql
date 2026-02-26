@@ -36,7 +36,7 @@ INSERT INTO settings (key, value) VALUES
   ('brand_name', 'Your Brand'),
   ('brand_tagline', 'Produk Berkualitas Premium'),
   ('brand_logo', 'https://via.placeholder.com/150'),
-  ('instagram_url', 'https://instagram.com/yourbrand'),
+  ('instagram_url', 'https://www.instagram.com/dna.market.id?igsh=eDhvYTB6OWZncWd4'),
   ('facebook_url', 'https://facebook.com/yourbrand'),
   ('tiktok_url', 'https://tiktok.com/@yourbrand'),
   ('whatsapp_number', '6283862644911'),
