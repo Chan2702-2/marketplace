@@ -16,8 +16,8 @@ const APP_CONFIG = {
   // Social Media Links (will be loaded from database)
   socialMedia: {
     instagram: 'https://www.instagram.com/dna.market.id?igsh=eDhvYTB6OWZncWd4',
-    facebook: 'https://facebook.com/dna.store',
-    tiktok: 'https://tiktok.com/@dna.store'
+    facebook: '#',
+    tiktok: '#'
   },
   
   // WhatsApp Customer Service (will be loaded from database)
